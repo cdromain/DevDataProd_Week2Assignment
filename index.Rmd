@@ -1,5 +1,5 @@
 ---
-title: "Developing Data Product - J.H. D.S.S. (Coursera)"
+title: "Developing Data Products - J.H. D.S.S. (Coursera)"
 subtitle: "Week 2 assignment - R Markdown and Leaflet"
 author: "Romain Faure"
 date: "April 2nd 2017"
