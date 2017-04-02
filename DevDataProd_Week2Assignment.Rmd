@@ -1,5 +1,5 @@
 ---
-title: "Developing Data Product course - J.H. D.S.S. (Coursera)"
+title: "Developing Data Product - J.H. D.S.S. (Coursera)"
 subtitle: "Week 2 assignment - R Markdown and Leaflet"
 author: "Romain Faure"
 date: "April 2nd 2017"
@@ -11,8 +11,10 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
+
 ```{r, message=FALSE}
 library(leaflet)
+
 statedf <- as.data.frame(state.x77)
 
 col <- c("")
@@ -42,13 +44,14 @@ statedf <- data.frame(statedf, lat = c(32.806671, 61.370716, 33.729759, 34.96970
                               -96.928917, -122.070938, -77.209755, -71.511780,
                               -80.945007, -99.438828, -86.692345, -97.563461,
                               -111.862434, -72.710686, -78.169968, -121.490494,
-                              -80.954453, -89.616508, -107.302490), col, stringsAsFactors = FALSE)
+                              -80.954453, -89.616508, -107.302490), 
+                      col, stringsAsFactors = FALSE)
 
 
 
 for (i in 1:nrow(statedf)) {
         if (statedf[i, 3] < 1)
-                statedf[i, 11] <- "grey"
+                statedf[i, 11] <- "#c9c98e"
         else if (statedf[i, 3] >= 1 && statedf[i, 3] < 1.5)
                 statedf[i, 11] <- "yellow"
         else if (statedf[i, 3] >= 1.5 && statedf[i, 3] < 2)
@@ -60,23 +63,17 @@ for (i in 1:nrow(statedf)) {
 
 statedf %>% 
   leaflet() %>%
-  addTiles(urlTemplate = "//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>%
-  addCircles(weight = 1, radius = sqrt(statedf$Population) * 1000, color = statedf$col) %>%
-  addLegend(labels = c("less than 1%", "between 1 and 1.5%", "between 1.5 and 2%", "more than 2%"), colors = c("grey", "yellow", "orange", "red"), title = "Illiteracy")
+  addTiles() %>%
+  addCircles(weight = 1, radius = sqrt(statedf$Population) * 1000,
+             color = statedf$col) %>%
+  addLegend(labels = c("less than 1%", "between 1 and 1.5%", 
+                       "between 1.5 and 2%", "more than 2%"), 
+            colors = c("#c9c98e", "yellow", "orange", "red"), 
+            title = "Illiteracy")
 ```
 
-```{r, eval=FALSE}
-myFun <- function(x) {
-        if (x$Illiteracy < 1) x$col == "white"
-        if (x$Illiteracy >= 1 && x$Illiteracy < 1.5) x$col = "yellow"
-        if (x$Illiteracy >= 1.5 && x$Illiteracy < 2) x$col = "orange"
-        else x$col = "red"
-}
+#### Population of the USA states and illiteracy in the seventies : a north/south trend ?
 
-statedf <- apply(statedf, 1, FUN = myFun)
-
-
-statedf <- apply(statedf, 1, function(statedf) {
-                    if (statedf$Illiteracy == "1.1") statedf$col == "red"
-                 })
-```
+> - Population (1975) and illiteracy (1970) data come from R `state.x77` data set.
+> - The circles size represents how populated the states are.
+> - The list of states latitudes and longitudes that was used comes from [this website](https://inkplant.com/code/state-latitudes-longitudes).
