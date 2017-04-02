@@ -1,0 +1,82 @@
+---
+title: "Developing Data Product course - J.H. D.S.S. (Coursera)"
+subtitle: "Week 2 assignment - R Markdown and Leaflet"
+author: "Romain Faure"
+date: "April 2nd 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r, message=FALSE}
+library(leaflet)
+statedf <- as.data.frame(state.x77)
+
+col <- c("")
+
+statedf <- data.frame(statedf, lat = c(32.806671, 61.370716, 33.729759, 34.969704,
+                                       36.116203, 39.059811, 41.597782, 39.318523,
+                                       27.766279, 33.040619, 21.094318,
+                                       44.240459, 40.349457, 39.849426, 42.011539,
+                                       38.526600,  37.668140, 31.169546, 44.693947,
+                                       39.063946, 42.230171, 43.326618, 45.694454,
+                                       32.741646, 38.456085, 46.921925, 41.125370,
+                                       38.313515, 43.452492, 40.298904, 34.840515,
+                                       42.165726, 35.630066, 47.528912, 40.388783,
+                                       35.565342, 44.572021, 40.590752, 41.680893,
+                                       33.856892, 44.299782, 35.747845, 31.054487,
+                                       40.150032, 44.045876, 37.769337, 47.400902,
+                                       38.491226, 44.268543, 42.755966),
+                      lng = c(-86.791130, -152.404419, -111.431221, -92.373123,
+                              -119.681564, -105.311104, -72.755371, -75.507141,
+                              -81.686783, -83.643074, -157.498337,
+                              -114.478828, -88.986137, -86.258278, -93.210526,
+                              -96.726486, -84.670067, -91.867805, -69.381927,
+                              -76.802101, -71.530106, -84.536095, -93.900192,
+                              -89.678696, -92.288368, -110.454353, -98.268082,
+                              -117.055374, -71.563896, -74.521011, -106.248482,
+                              -74.948051, -79.806419, -99.784012, -82.764915,
+                              -96.928917, -122.070938, -77.209755, -71.511780,
+                              -80.945007, -99.438828, -86.692345, -97.563461,
+                              -111.862434, -72.710686, -78.169968, -121.490494,
+                              -80.954453, -89.616508, -107.302490), col, stringsAsFactors = FALSE)
+
+
+
+for (i in 1:nrow(statedf)) {
+        if (statedf[i, 3] < 1)
+                statedf[i, 11] <- "grey"
+        else if (statedf[i, 3] >= 1 && statedf[i, 3] < 1.5)
+                statedf[i, 11] <- "yellow"
+        else if (statedf[i, 3] >= 1.5 && statedf[i, 3] < 2)
+                statedf[i, 11] <- "orange"
+        else {
+                statedf[i, 11] <- "red"
+        }
+}
+
+statedf %>% 
+  leaflet() %>%
+  addTiles(urlTemplate = "//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>%
+  addCircles(weight = 1, radius = sqrt(statedf$Population) * 1000, color = statedf$col) %>%
+  addLegend(labels = c("less than 1%", "between 1 and 1.5%", "between 1.5 and 2%", "more than 2%"), colors = c("grey", "yellow", "orange", "red"), title = "Illiteracy")
+```
+
+```{r, eval=FALSE}
+myFun <- function(x) {
+        if (x$Illiteracy < 1) x$col == "white"
+        if (x$Illiteracy >= 1 && x$Illiteracy < 1.5) x$col = "yellow"
+        if (x$Illiteracy >= 1.5 && x$Illiteracy < 2) x$col = "orange"
+        else x$col = "red"
+}
+
+statedf <- apply(statedf, 1, FUN = myFun)
+
+
+statedf <- apply(statedf, 1, function(statedf) {
+                    if (statedf$Illiteracy == "1.1") statedf$col == "red"
+                 })
+```
