@@ -72,7 +72,7 @@ statedf %>%
             title = "Illiteracy")
 ```
 
-#### Population of the USA states in the seventies and illiteracy : a north/south trend ?
+#### Population of the USA states in the seventies : a north/south illiteracy trend ?
 
 > - Population (1975) and illiteracy (1970) data come from R `state.x77` data set.
 > - The circles size represents how populated the states are.
